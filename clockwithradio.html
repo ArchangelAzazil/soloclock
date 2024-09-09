@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock with Multiple Time Zones</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #10101E;
+            flex-direction: column;
+        }
+        
+        .datetime {
+            color: #fff;
+            background: #10101e;
+            font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif';
+            width: 100%;
+            max-width: 340px;
+            padding: 15px 10px;
+            border: 3px solid #4fd5ba;
+            border-radius: 5px;
+            -webkit-box-reflect: below 1px linear-gradient(transparent, rgba(255, 255, 255, 0.1));
+            transition: 0.5s;
+            transition-property: background, box-shadow;
+            margin: 10px;
+        }
+        
+        .datetime:hover {
+            background: #4fd5ba;
+            box-shadow: 0 0 30px #4fd5ba;
+        }
+        
+        .date {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+        
+        .time {
+            font-size: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .time span:not(:last-child){
+            position: relative;
+            margin: 0 6px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+        
+        .time span:last-child{
+            background: #2E94E3;
+            font-size: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 20px;
+            padding: 0 5px;
+            border-radius: 3px;
+        }
+        
+        .time span#period.active {
+            background: #4fd5ba;
+        }
+        
+        .clock-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .clock-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 70px;
+        }
+        
+        .clock-label {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #4fd5ba; /* Same color as the border */
+        }
+        
+        #radio-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #radio-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            padding: 15px 10px;
+            border: 3px solid #4fd5ba;
+            border-radius: 5px;
+            transition: 0.5s;
+            transition-property: background, box-shadow;
+            margin-bottom: 10px;
+        }
+        
+        #radio-link:hover {
+            background: #4fd5ba;
+            box-shadow: 0 0 30px #4fd5ba;
+        }
+        
+        #return-message {
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .glow {
+            background: #f471e9;
+            box-shadow: 0 0 30px #fd31bc;
+        }
+        
+        
+        .clock {
+            width: 100%;
+            /*max-width: 200px; /* Adjust the width as needed */
+        }
+        
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .clock-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        
+            .clock-wrapper {
+                max-width: 100%;
+            }
+        }
+        
+    </style>
+</head>
+<body onload="initClocks()">
+    <div class="clock-container">
+        <div class="clock-wrapper">
+            <div class="clock-label">Los Angeles</div>
+            <div class="clock datetime">
+                <div class="date">
+                    <span id="dayname-la">Day</span>,
+                    <span id="month-la">Month</span>
+                    <span id="daynum-la">00</span>,
+                    <span id="year-la">Year</span>
+                </div>
+                <div class="time">
+                    <span id="hour-la">00</span>:
+                    <span id="minutes-la">00</span>:
+                    <span id="seconds-la">00</span>
+                    <span id="period-la">AM</span>
+                </div>
+            </div>
+        </div>
+        <div class="clock-wrapper">
+            <div class="clock-label">Chicago</div>
+            <div class="clock datetime">
+                <div class="date">
+                    <span id="dayname-chicago">Day</span>,
+                    <span id="month-chicago">Month</span>
+                    <span id="daynum-chicago">00</span>,
+                    <span id="year-chicago">Year</span>
+                </div>
+                <div class="time">
+                    <span id="hour-chicago">00</span>:
+                    <span id="minutes-chicago">00</span>:
+                    <span id="seconds-chicago">00</span>
+                    <span id="period-chicago">AM</span>
+                </div>
+            </div>
+        </div>
+        <div class="clock-wrapper">
+            <div class="clock-label">Hawaii</div>
+            <div class="clock datetime">
+                <div class="date">
+                    <span id="dayname-hawaii">Day</span>,
+                    <span id="month-hawaii">Month</span>
+                    <span id="daynum-hawaii">00</span>,
+                    <span id="year-hawaii">Year</span>
+                </div>
+                <div class="time">
+                    <span id="hour-hawaii">00</span>:
+                    <span id="minutes-hawaii">00</span>:
+                    <span id="seconds-hawaii">00</span>
+                    <span id="period-hawaii">AM</span>
+                </div>
+            </div>
+        </div>
+        <div class="clock-wrapper">
+            <div class="clock-label">London</div>
+            <div class="clock datetime">
+                <div class="date">
+                    <span id="dayname-london">Day</span>,
+                    <span id="month-london">Month</span>
+                    <span id="daynum-london">00</span>,
+                    <span id="year-london">Year</span>
+                </div>
+                <div class="time">
+                    <span id="hour-london">00</span>:
+                    <span id="minutes-london">00</span>:
+                    <span id="seconds-london">00</span>
+                    <span id="period-london">AM</span>
+                </div>
+            </div>
+        </div>
+        <div class="clock-wrapper">
+            <div class="clock-label">Radio Garden</div>
+            <div class="clock datetime" id="radio-container">
+                <a href="https://radio.garden" target="_blank" id="radio-link">Open Radio Garden</a>
+                <div id="return-message">After selecting a station, return to this tab to see the clocks.</div>
+            </div>
+        </div>              
+    </div>
+    <script>
+        function updateClock(timezoneName, timezoneOffset) {
+            const now = new Date();
+            const localTime = new Date(now.getTime() + timezoneOffset * 3600000);
+        
+            const dayName = localTime.toLocaleString('en-US', { weekday: 'long' });
+            const month = localTime.toLocaleString('en-US', { month: 'long' });
+            const dayNum = localTime.getDate();
+            const year = localTime.getFullYear();
+            const hour = localTime.getHours();
+            const minutes = localTime.getMinutes();
+            const seconds = localTime.getSeconds();
+            const period = hour >= 12 ? 'PM' : 'AM';
+        
+            const hour12 = hour % 12 || 12;
+        
+            document.getElementById(`dayname-${timezoneName}`).textContent = dayName;
+            document.getElementById(`month-${timezoneName}`).textContent = month;
+            document.getElementById(`daynum-${timezoneName}`).textContent = dayNum;
+            document.getElementById(`year-${timezoneName}`).textContent = year;
+            document.getElementById(`hour-${timezoneName}`).textContent = hour12;
+            document.getElementById(`minutes-${timezoneName}`).textContent = minutes.toString().padStart(2, '0');
+            document.getElementById(`seconds-${timezoneName}`).textContent = seconds.toString().padStart(2, '0');
+            document.getElementById(`period-${timezoneName}`).textContent = period;
+        }
+        
+        document.getElementById('radio-link').addEventListener('click', function() {
+            this.classList.add('glow');
+        });
+        
+        function initClocks() {
+            initClock("la", -8); // Los Angeles (PST)
+            initClock("chicago", -6); // Chicago (CST)
+            initClock("hawaii", -10); // Hawaii (HST)
+            initClock("london", 1); // London (GMT)
+        }
+        
+        function initClock(timezoneName, timezoneOffset) {
+            updateClock(timezoneName, timezoneOffset);
+            setInterval(() => updateClock(timezoneName, timezoneOffset), 1000);
+        }        
+    </script>
+</body>
+</html>
